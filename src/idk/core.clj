@@ -52,8 +52,7 @@
           [:td {:align "center"} [:h1.huge (link-to "/ask" "ASK")]]
           [:td {:align "center"} [:h1.huge (link-to "/answer" "ANSWER")]]]]
         [:table {:border "0" :width "100%"}
-         (map (fn [x] [:tr [:h1 (link-to (str "/answer/" x) (:question (db-get idk-db x)))]]) (unanswered))]
-        [:h1 (link-to "/archive" "ARCHIVE")]]]))
+         (map (fn [x] [:tr [:h1 (link-to (str "/answer/" x) (:question (db-get idk-db x)))]]) (unanswered))]]]))
 
 (def ask-html
      (html

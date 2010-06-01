@@ -17,7 +17,16 @@
 
 (def head-html
      [:head
-       (include-css "/resources/public/css/idk.css")
+      (include-css "/resources/public/css/idk.css")
+      (javascript-tag
+       "function changeAnswerButton() {
+            var txtbox = document.getElementById('anstxtbox');
+            var ansb = document.getElementById('ansbutton');
+            if (txtbox.value == '')
+                ansb.value = 'SKIP'
+            else
+                ansb.value = 'ANSWER'
+       }")
        [:title "I don't know"]])
 
 (def header-html
@@ -83,7 +92,7 @@
     (html
      (:html4 doctype)
      head-html
-     [:body
+     [:body {:onload "document.getElementById('ansbutton').value = 'SKIP';"}
       header-html
       (if question
         [:div#body
@@ -92,9 +101,9 @@
          [:h1.huge "ANSWER:"]
          [:form {:method "POST" :action "/answer"}
           [:input {:type "hidden" :name "id" :value (str id)}]
-          [:input.ask {:type "text" :name "answer" :size "80"}]
+          [:input#anstxtbox {:class "ask" :type "text" :name "answer" :size "80" :onkeyup "changeAnswerButton();"}]
           [:br][:br]
-          [:input.ask {:type "submit" :value "ANSWER"}]]]
+          [:input#ansbutton {:class "ask" :type "submit" :value "ANSWER"}]]]
         [:div#body
          [:h1.huge "NO SUCH QUESTION"]])])))
 

@@ -114,7 +114,7 @@
          [:h1.huge "NO SUCH QUESTION"]])])))
 
 (defn archive-html []
-  (let [ids (keys (:data @idk-db))]
+  (let [ids (filter #(not= % :next-id) (keys (:data @idk-db)))]
     (html
      (:html4 doctype)
      head-html

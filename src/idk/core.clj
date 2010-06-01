@@ -97,6 +97,18 @@
         [:div#body
          [:h1.huge "NO SUCH QUESTION"]])])))
 
+(defn archive-html []
+  (let [ids (keys (:data @idk-db))]
+    (html
+     (:html4 doctype)
+     head-html
+     [:body
+      header-html
+      [:div#body
+       [:h1.huge "ARCHIVE"]
+       [:table {:border "0" :width "100%"}
+        (map (fn [x] [:tr [:h1 (link-to (str "/" x) (:question (db-get idk-db x)))]]) ids)]]])))
+
 (defn home-handler [request]
   {:status 200
    :headers {"Content-Type" "text/html"}
@@ -143,6 +155,11 @@
    :headers {"Content-Type" "text/html"}
    :body (question-html id)})
 
+(defn archive-handler [request]
+  {:status 200
+   :headers {"Content-Type" "text/html"}
+   :body (archive-html)})
+
 (def routes
      (app
       (wrap-params)
@@ -151,6 +168,7 @@
       ["ask"] {:get ask-get-handler :post ask-post-handler}
       ["answer" [id integer]] (fn [req] (answer-id-handler req id))
       ["answer"] {:get answer-get-handler :post answer-post-handler}
+      ["archive"] archive-handler
       [[id integer]] (fn [req] (question-handler req id))))
 
 (defn idk [] (run-jetty #'routes {:port 8080}))

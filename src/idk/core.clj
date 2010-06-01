@@ -15,6 +15,9 @@
       (Integer/parseInt s)
       (catch Exception e)))
 
+(defn escape [s]
+  (-> s (.replace "<" "&lt;") (.replace ">" "&gt;")))
+
 (def head-html
      [:head
       (include-css "/resources/public/css/idk.css")
@@ -52,7 +55,7 @@
           [:td {:align "center"} [:h1.huge (link-to "/ask" "ASK")]]
           [:td {:align "center"} [:h1.huge (link-to "/answer" "ANSWER")]]]]
         [:table {:border "0" :width "100%"}
-         (map (fn [x] [:tr [:h1 (link-to (str "/answer/" x) (:question (db-get idk-db x)))]]) (unanswered))]]]))
+         (map (fn [x] [:tr [:h1 (link-to (str "/answer/" x) (escape (:question (db-get idk-db x))))]]) (unanswered))]]]))
 
 (def ask-html
      (html
@@ -77,11 +80,11 @@
       (if question
         [:div#body
          [:h1.huge "QUESTION:"]
-         [:h1 question]
+         [:h1 (escape question)]
          [:h1.huge "ANSWER:"]
          (if answer
            [:div
-            [:h1 answer]
+            [:h1 (escape answer)]
             [:form {:method "POST" :action "/ask"}
              [:input {:type "hidden" :name "question" :value question}]
              [:input {:type "hidden" :name "id" :value (str id)}]
@@ -100,7 +103,7 @@
       (if question
         [:div#body
          [:h1.huge "QUESTION:"]
-         [:h1 question]
+         [:h1 (escape question)]
          [:h1.huge "ANSWER:"]
          [:form {:method "POST" :action "/answer"}
           [:input {:type "hidden" :name "id" :value (str id)}]
@@ -120,7 +123,7 @@
       [:div#body
        [:h1.huge "ARCHIVE"]
        [:table {:border "0" :width "100%"}
-        (map (fn [x] [:tr [:h1 (link-to (str "/" x) (:question (db-get idk-db x)))]]) ids)]]])))
+        (map (fn [x] [:tr [:h1 (link-to (str "/" x) (escape (:question (db-get idk-db x))))]]) ids)]]])))
 
 (defn home-handler [request]
   {:status 200

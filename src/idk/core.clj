@@ -26,7 +26,7 @@
 
 (defn unanswered []
   (let [ids (keys (:data @idk-db))]
-    (filter (fn [x] (not (:answer (db-get idk-db x)))) ids)))
+    (filter (fn [x] (and (not (:answer (db-get idk-db x))) (not= x :next-id))) ids)))
 
 (defn home-html []
      (html
@@ -123,8 +123,9 @@
 (defn ask-post-handler [{params :params :as request}]
   (if (and (params "question") (not= (count (params "question")) 0))
     (let [question (if (= (last (params "question")) \?) (params "question") (str (params "question") "?"))
-          id (.hashCode question)]
+          id (db-get idk-db :next-id 1)]
       (db-assoc idk-db id {:question question :answer nil})
+      (db-assoc idk-db :next-id (inc (db-get idk-db :next-id 1)))
       {:status 307
        :headers {"Location" (str "/" id)}})
     (ask-get-handler request)))

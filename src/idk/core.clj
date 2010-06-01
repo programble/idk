@@ -82,6 +82,7 @@
             [:h1 answer]
             [:form {:method "POST" :action "/ask"}
              [:input {:type "hidden" :name "question" :value question}]
+             [:input {:type "hidden" :name "id" :value (str id)}]
              [:input.ask {:type "submit" :value "ASK AGAIN"}]]]
            [:h1 (link-to (str "/answer/" id) "This question has not been answered yet")])]
         [:div#body
@@ -132,7 +133,7 @@
 (defn ask-post-handler [{params :params :as request}]
   (if (and (params "question") (not= (count (params "question")) 0))
     (let [question (if (= (last (params "question")) \?) (params "question") (str (params "question") "?"))
-          id (db-get idk-db :next-id 1)]
+          id (if (params "id") (integer (params "id")) (db-get idk-db :next-id 1))]
       (db-assoc idk-db id {:question question :answer nil})
       (db-assoc idk-db :next-id (inc (db-get idk-db :next-id 1)))
       {:status 307

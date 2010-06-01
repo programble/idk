@@ -16,14 +16,22 @@ body {
    background-color: black;
 }
 
+h1.header {
+   color: white;
+   padding-right: 50px;
+   display: inline;
+}
+
 #header a {
    color: white;
 }
 
-.header {
+#title {
    margin: 0px;
-   padding: 0px;
+   /*padding: 0px;*/
+   padding-right: 100px;
    color: white;
+   display: inline;
 }
 
 .huge {

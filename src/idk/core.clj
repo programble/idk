@@ -31,7 +31,10 @@
 
 (def header-html
      [:div#header
-      [:h1.header (link-to "/" "I DON'T KNOW")]])
+      [:h1#title (link-to "/" "I DON'T KNOW")]
+      [:h1.header (link-to "/ask" "ASK")]
+      [:h1.header (link-to "/answer" "ANSWER")]
+      [:h1.header (link-to "/archive" "ARCHIVE")]])
 
 (defn unanswered []
   (let [ids (keys (:data @idk-db))]
